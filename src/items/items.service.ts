@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateItemInput } from './dto/create-item.input';
-import { UpdateItemInput } from './dto/update-item.input';
+import { CreateItemInput, UpdateItemInput } from './dto/inputs';
 
 @Injectable()
 export class ItemsService {
