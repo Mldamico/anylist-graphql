@@ -10,6 +10,7 @@ import { Repository } from 'typeorm';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { User } from './entities/user.entity';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -20,7 +21,10 @@ export class UsersService {
 
   async create(signUpInput: SignUpInput): Promise<User> {
     try {
-      const newUser = this.usersRepository.create(signUpInput);
+      const newUser = this.usersRepository.create({
+        ...signUpInput,
+        password: bcrypt.hashSync(signUpInput.password, 10),
+      });
       await this.usersRepository.save(newUser);
       return newUser;
     } catch (error) {
