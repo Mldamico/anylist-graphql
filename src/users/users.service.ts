@@ -36,8 +36,15 @@ export class UsersService {
     return [];
   }
 
-  async findOne(id: string): Promise<User> {
-    throw new Error('Not imp');
+  async findOneByEmail(email: string): Promise<User> {
+    try {
+      return await this.usersRepository.findOneOrFail({ where: { email } });
+    } catch (error) {
+      this.handleDbErrors({
+        code: 'error-001',
+        detail: `${email} not found`,
+      });
+    }
   }
 
   update(id: string, updateUserInput: UpdateUserInput) {
@@ -50,6 +57,9 @@ export class UsersService {
 
   private handleDbErrors(error: any): never {
     if (error.code === '23505') {
+      throw new BadRequestException(error.details.replace('Key ', ''));
+    }
+    if ((error.code = 'error-001')) {
       throw new BadRequestException(error.details.replace('Key ', ''));
     }
     this.logger.error(error);
