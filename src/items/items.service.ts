@@ -39,6 +39,6 @@ export class ItemsService {
 
     await this.itemsRepository.remove(item);
 
-    return item;
+    return { ...item, id };
   }
 }
