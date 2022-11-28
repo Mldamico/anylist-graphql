@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SignUpInput } from 'src/auth/dto/inputs';
 import { Repository } from 'typeorm';
@@ -8,6 +13,7 @@ import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
+  private logger = new Logger('UsersService');
   constructor(
     @InjectRepository(User) private readonly usersRepository: Repository<User>,
   ) {}
@@ -18,8 +24,7 @@ export class UsersService {
       await this.usersRepository.save(newUser);
       return newUser;
     } catch (error) {
-      console.log(error);
-      throw new BadRequestException('Something went wrong');
+      this.handleDbErrors(error);
     }
   }
 
@@ -37,5 +42,13 @@ export class UsersService {
 
   block(id: string): Promise<User> {
     throw new Error('Not imp');
+  }
+
+  private handleDbErrors(error: any): never {
+    if (error.code === '23505') {
+      throw new BadRequestException(error.details.replace('Key ', ''));
+    }
+    this.logger.error(error);
+    throw new InternalServerErrorException('Please check server logs');
   }
 }
