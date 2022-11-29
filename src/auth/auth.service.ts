@@ -21,6 +21,7 @@ export class AuthService {
 
   async login(loginInput: LoginInput): Promise<AuthResponse> {
     const user = await this.usersService.findOneByEmail(loginInput.email);
+
     if (!bcrypt.compareSync(loginInput.password, user.password)) {
       throw new BadRequestException('Auth failed');
     }
