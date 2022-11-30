@@ -26,8 +26,11 @@ export class ItemsResolver {
   }
 
   @Query(() => Item, { name: 'item' })
-  findOne(@Args('id', { type: () => ID }, ParseUUIDPipe) id: string) {
-    return this.itemsService.findOne(id);
+  findOne(
+    @Args('id', { type: () => ID }, ParseUUIDPipe) id: string,
+    @currentUser() user: User,
+  ) {
+    return this.itemsService.findOne(id, user);
   }
 
   @Mutation(() => Item)
@@ -38,7 +41,10 @@ export class ItemsResolver {
   }
 
   @Mutation(() => Item)
-  removeItem(@Args('id', { type: () => ID }, ParseUUIDPipe) id: string) {
-    return this.itemsService.remove(id);
+  removeItem(
+    @Args('id', { type: () => ID }, ParseUUIDPipe) id: string,
+    @currentUser() user: User,
+  ) {
+    return this.itemsService.remove(id, user);
   }
 }
