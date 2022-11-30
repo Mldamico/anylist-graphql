@@ -44,7 +44,7 @@ export class User {
   @JoinColumn({ name: 'last_update_by' })
   lastUpdateBy?: User;
 
-  @Field(() => Item)
+  @Field(() => [Item])
   @OneToMany(() => Item, (item) => item.user)
-  items: Item;
+  items: Item[];
 }

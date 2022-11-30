@@ -9,7 +9,7 @@ type User {
   roles: [String!]!
   isActive: Boolean!
   lastUpdateBy: User
-  items: Item!
+  items: [Item!]!
 }
 
 type Item {
