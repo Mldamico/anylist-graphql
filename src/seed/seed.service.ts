@@ -6,7 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../users/entities/user.entity';
 import { Item } from '../items/entities/item.entity';
 import { Repository } from 'typeorm';
-import { SEED_USERS } from './data/seed-data';
+import { SEED_USERS, SEED_ITEMS } from './data/seed-data';
 
 @Injectable()
 export class SeedService {
@@ -16,6 +16,7 @@ export class SeedService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     @InjectRepository(Item) private readonly itemsRepository: Repository<Item>,
     private readonly usersService: UsersService,
+    private readonly itemsService: ItemsService,
   ) {
     this.isProd = configService.get('STATE') === 'prod';
   }
@@ -25,6 +26,7 @@ export class SeedService {
 
     await this.deleteDatabase();
     const user = await this.loadUsers();
+    await this.loadItems(user);
     return true;
   }
 
@@ -45,5 +47,13 @@ export class SeedService {
     }
 
     return users[0];
+  }
+
+  async loadItems(user: User): Promise<void> {
+    const itemsPromises = [];
+    for (const item of SEED_ITEMS) {
+      itemsPromises.push(this.itemsService.create(item, user));
+    }
+    await Promise.all(itemsPromises);
   }
 }
