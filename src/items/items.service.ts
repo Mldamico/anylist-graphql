@@ -32,14 +32,19 @@ export class ItemsService {
     return item;
   }
 
-  async update(id: string, updateItemInput: UpdateItemInput): Promise<Item> {
+  async update(
+    id: string,
+    updateItemInput: UpdateItemInput,
+    user: User,
+  ): Promise<Item> {
+    const foundProduct = await this.findOne(id, user);
     const item = await this.itemsRepository.preload(updateItemInput);
     if (!item) throw new NotFoundException(`Item with ${id} not found`);
     return this.itemsRepository.save(item);
   }
 
-  async remove(id: string): Promise<Item> {
-    const item = await this.findOne(id);
+  async remove(id: string, user): Promise<Item> {
+    const item = await this.findOne(id, user);
 
     await this.itemsRepository.remove(item);
 
