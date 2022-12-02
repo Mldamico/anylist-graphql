@@ -11,3 +11,5 @@
 4. Run `yarn start:dev`
 
 5. Api endpoint `http://localhost/graphql`
+
+6. Run mutation seed "executeSeed" to fill DB.
