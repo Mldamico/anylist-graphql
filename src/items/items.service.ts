@@ -69,7 +69,7 @@ export class ItemsService {
     return this.itemsRepository.save(item);
   }
 
-  async remove(id: string, user): Promise<Item> {
+  async remove(id: string, user: User): Promise<Item> {
     const item = await this.findOne(id, user);
 
     await this.itemsRepository.remove(item);
