@@ -5,11 +5,13 @@ import {
   ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
+  Unique,
 } from 'typeorm';
 import { List } from '../../lists/entities/list.entity';
 import { Item } from '../../items/entities/item.entity';
 
 @ObjectType()
+@Unique('listitem-item', ['list', 'item'])
 @Entity('listItems')
 export class ListItem {
   @PrimaryGeneratedColumn('uuid')
