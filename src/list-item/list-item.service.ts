@@ -22,7 +22,7 @@ export class ListItemService {
   }
 
   findAll() {
-    return `This action returns all listItem`;
+    return this.listItemRepository.find();
   }
 
   findOne(id: number) {
